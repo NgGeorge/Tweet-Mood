@@ -15,7 +15,7 @@ var drawMap = function() {
 		maxZoom: 20,
 		minZoom: 3
 	}).setView([40, -97], 5);
-	timer = setInterval(myTimer, 10000);
+	timer = setInterval(myTimer, 7500);
 	var layer = L.mapbox.tileLayer('gngcp.p97o5d8j');
 	layer.on('ready', function(){
 		getData();
@@ -155,6 +155,11 @@ var populateFeed = function(singleData) {
 				textData.innerHTML += "<a href='https://twitter.com/hashtag/" + tokens[i].substring(1, tokens[i].length) + "'>" + tokens[i] + " </a>";
 			}
 		}
+		if (singleData.score == "positive") {
+			infoPiece.style.borderLeft = "green solid 5px";
+		} else {
+			infoPiece.style.borderLeft = "#870029 solid 5px";
+	    }
 		$("#twitter").prepend(infoPiece); 
 		filterManager = 0;
 	} else {
