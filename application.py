@@ -36,4 +36,6 @@ if __name__ == '__main__':
     stream.filter(locations=[-125.0011, 24.9493, -66.9326, 49.5904], async=True)
 
     application.debug = True
-    application.run(threaded=True)
+    application.run(threaded=True, use_reloader=False)
+
+

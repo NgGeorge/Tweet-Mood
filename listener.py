@@ -11,7 +11,7 @@ class TweetStreamListener(StreamListener):
 
     def on_data(self, data):
         tweet = json.loads(data)
-        print tweet
+        print tweet['text']
         r.publish('tweet_stream', json.dumps(tweet))
         return True
 
