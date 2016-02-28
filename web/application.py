@@ -29,11 +29,12 @@ def get_tweets():
     return Response(event_stream(), mimetype="text/event-stream")
 
 if __name__ == '__main__':
-    auth = OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    listener = TweetStreamListener()
-    stream = Stream(auth, listener)
-    stream.filter(locations=[-125.0011, 24.9493, -66.9326, 49.5904], async=True)
+    if os.environ.get('REDIS_HOST') == 'localhost':
+        auth = OAuthHandler(consumer_key, consumer_secret)
+        auth.set_access_token(access_token, access_token_secret)
+        listener = TweetStreamListener()
+        stream = Stream(auth, listener)
+        stream.filter(locations=[-125.0011, 24.9493, -66.9326, 49.5904], async=True)
 
     application.debug = True
     application.run(threaded=True, use_reloader=False)

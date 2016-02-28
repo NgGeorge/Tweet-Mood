@@ -1,0 +1,10 @@
+branch-defaults:
+  master:
+    environment: happinessmap-dev
+global:
+  application_name: happiness map
+  default_ec2_keyname: parking
+  default_platform: 64bit Amazon Linux 2015.09 v2.0.8 running Python 2.7
+  default_region: us-west-2
+  profile: null
+  sc: git
