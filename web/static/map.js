@@ -22,7 +22,7 @@ var drawMap = function() {
 		getNews();
 		$('#news').hide(); // Starts Hidden
 	});
-	stateLayers.fillOpacity = .5;
+	stateLayers.fillOpacity = .7;
 }
 
 

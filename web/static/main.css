@@ -12,11 +12,11 @@ body {
 
 h1 {
 	background-color: #3e3e3e;
-	color: #f2f2f2;
+	color: white;
 	margin: 0;
 	height: 2em;
     font-size:2.4vw;
-	padding-left: 16%;
+	padding-left: 6%;
 }
 
 g {
@@ -24,7 +24,7 @@ g {
 }
 
 #capture {
-    margin-left: 14%;
+    margin-left: 6%;
 }
 
 #dataFeed {
