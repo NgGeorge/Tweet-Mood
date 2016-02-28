@@ -10,6 +10,12 @@ body {
 	font-family : "Open Sans", sans-serif;
 }
 
+.leaflet-circle-icon.marker {}
+
+g {
+    animation: blinker 1s linear 3;
+}
+
 h1 {
 	background-color: #3e3e3e;
 	color: #f2f2f2;
@@ -185,4 +191,9 @@ h1 {
 @-o-keyframes fadeout {
     from { opacity: 1; }
     to   { opacity: 0; }
+}
+
+/* Flashing */
+@keyframes blinker {  
+  50% { opacity: 0.0; }
 }

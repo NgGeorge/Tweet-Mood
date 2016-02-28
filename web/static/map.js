@@ -7,7 +7,7 @@ var NYT = "http://api.nytimes.com/svc/topstories/v1/national.json?api-key=b6467e
 var drawMap = function() {
 	L.mapbox.accessToken = 'pk.eyJ1IjoiZ25nY3AiLCJhIjoiY2lsNXd5b3ZrMDA0a3UybHoxY3h5NGN3eiJ9.OrXfMbZ123f3f1EfPRCHHA';
 	var southWest = L.latLng(0, -170),
-    northEast = L.latLng(60, 0),
+    northEast = L.latLng(75, 0),
     bounds = L.latLngBounds(southWest, northEast);
 
 	map = L.mapbox.map('map', 'gngcp.p97o5d8j', {
@@ -17,11 +17,35 @@ var drawMap = function() {
 	}).setView([40, -97], 5);
 
 	var layer = L.mapbox.tileLayer('gngcp.p97o5d8j');
+	L.geoJson(statesData, {style: style}).addTo(map);
 	layer.on('ready', function(){
 		getData();
 		getNews();
 		$('#news').hide(); // Starts Hidden
 	});
+}
+
+function getColor(d) {
+	 return d > 80 ? '#15811a' :
+           d > 60  ? '#319635' :
+           d > 25  ? '#55b059' :
+           d > 5  ? '#7ecc82' :
+           d > -5   ? '#d3d3d3' :
+           d > -25   ? '#d489a0' :
+           d > -60   ? '#bd5776' :
+           d > -80    ? '#9a1f44' :
+					  '#870029' ;
+}
+
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.score / feature.properties.count * 100),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.5
+    };
 }
 
 var getData = function() {
@@ -46,8 +70,9 @@ var getNews = function() {
 }
 
 var addLayers = function(singleData) {
-	var circle = new L.circleMarker([singleData.coordinates.coordinates[1], singleData.coordinates.coordinates[0]]).bindPopup(singleData.text);
-    circle.setRadius('5');
+	var circle = new L.circleMarker([singleData.place.bounding_box.coordinates[0][0][1], singleData.place.bounding_box.coordinates[0][0][0]]).bindPopup(singleData.text);
+    circle.setRadius('2');
+    $(circle._icon).addClass('marker');
     if (choose) {
 	    circle.options.fillColor = '#870029';
 		circle.options.color = '#870029';
@@ -59,6 +84,17 @@ var addLayers = function(singleData) {
 	}
     populateFeed(singleData);
 	circle.addTo(map);
+	for (i = 0; i < statesData.length; i++) {
+		if (statesData[i].properties.abbr == singleData.place.full_name.split(',')[1]); {
+			statesData[i].properties.count++;
+			if (singleData.score == "positive") {
+				statesData[i].properties.score += 1;
+			} else {
+				statesData[i].properties.score -= 1;
+			}
+			L.geoJson(statesData[i], {style: style}).addTo(map);
+		}
+	}
 }
 
 
