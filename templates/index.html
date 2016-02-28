@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <title>World In-Motion</title>
+    <title>US In-Motion</title>
 
         <!-- jQuery, Bootstrap -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
@@ -28,14 +28,19 @@
 
   <body>
   	<!-- Displays different data feeds -->
-  	<div id="dataFeed"></div>
+  	<div id="dataFeed">
+      <div id="twitter"> </div>
+      <div id="news"> </div>
+      <div id="education"> </div>
+    </div>
 
-  	<h1> World In-Motion : A World Map of <span style="color:yellow">Emotions</span> 
+  	<h1> US In-Motion : A United Map of <span style="color:yellow">Emotions</span> 
       <div class="dropdown">
-  	  		<button class="feedButton" onclick="$('#dataFeed').toggle()"> Toggle Feed </button>
+  	  		<button class="feedButton" onclick="$('#dataFeed').fadeToggle()"> Toggle Feed </button>
   	  		<div class="dropdown-content"> 
-  	  			<button class="dropdownOption"> Twitter </button>
-  	  			<button class="dropdownOption"> Local News </button>
+  	  			<button class="dropdownOption" onclick="$('#twitter').show()"> Twitter </button>
+  	  			<button class="dropdownOption" onclick="$('#twitter').hide()"> 
+            News </button>
   	  			<button class="dropdownOption"> Education </button>
   	  		</div>
   	  </div>
