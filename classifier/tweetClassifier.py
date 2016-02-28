@@ -2,7 +2,7 @@ import re
 import math
 import json
 
-class tweetClassifier:
+class tweetClassifier():
 	"""
 	classifies tweets as positive or negative through the use of a naive bayes classifier
 	"""
@@ -29,8 +29,12 @@ class tweetClassifier:
 		neg = dict()
 		for tweet, label in zip( tweets, labels ):
 			for word in tweet:
-				pos[ word ] = 0
-				neg[ word ] = 0
+				if word not in pos.keys():
+					pos[ word ] = 0
+				
+				if word not in neg.keys():
+					neg[ word ] = 0
+
 				if label:
 					pos[ word ] += 1
 				else:
@@ -38,28 +42,17 @@ class tweetClassifier:
 		
 		return pos, neg
 
-	def _extractFeatures( self, tweet, words ):
-		"""
-		generates features for a single tweet
-		"""
-		features = dict()
-		for word in words:
-			features[ word ] = word in tweet
-
-		return features
-
 	def classify( self, tweet ):
 		"""
 		classify a tweet as negative or positive
 		"""
 		if self.trained:
 			processed = self._cleanTweet( tweet )
-			features = self._extractFeatures( processed, self.probs.keys() )
 			pos = math.log10( self.pos_prob )
 			neg = math.log10( 1 - self.pos_prob )
 			
-			for word in features.keys():
-				if features[ word ]:
+			for word in processed:
+				if word in self.probs.keys():
 					if self.probs[ word ] == 0.0:
 						pos += -100.0 # add miniscule value 1e-100
 					elif self.probs[ word ] == 1.0:
@@ -86,7 +79,7 @@ class tweetClassifier:
 		self.pos_prob = float( sum( labels ) ) / len( labels )
 
 		for word in pos.keys():
-			self.probs[ word ] = float( pos[ word ] ) / ( pos[ word ] + neg[ word ] )
+			self.probs[ word ] = float( pos[ word ] ) / float( pos[ word ] + neg[ word ] )
 		
 		self.trained = True
 
@@ -109,14 +102,21 @@ class tweetClassifier:
 use to run tests
 """
 if __name__ == '__main__':
-	tweets = ['I love this car', 'This view is amazing', 'I feel great this morning',
-			  'I am so excited about the concert', 'He is my best friend', 'I do not like this car',
-			  'This view is horrible', 'I feel tired this morning', 'I am not looking forward to the concert',
-			  'He is my enemy']
+	raw_tweets = open( 'messages1.txt', 'r' )
+	raw_labels = open( 'labels1.txt', 'r' )
 
-	labels = [True, True, True, True, True, False, False, False, False, False]
+	data_tweets = json.loads( raw_tweets.read() )
+	data_labels = json.loads( raw_labels.read() )
+
+	raw_tweets.close()
+	raw_labels.close()
+
+	tweets = list()
+	labels = list()
+	for key in data_labels.keys():
+		tweets.append( data_tweets[ key ] )
+		labels.append( data_labels[ key ] )
 
 	clf = tweetClassifier()
 	clf.train( tweets, labels )
-	print clf.classify( 'I love you!' )
-	print clf.to_json()
+	print clf.classify( 'why am I still awake?' )
