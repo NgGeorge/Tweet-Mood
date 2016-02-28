@@ -1,16 +1,51 @@
+var data;
+var map;
+
 var drawMap = function() {
 	L.mapbox.accessToken = 'pk.eyJ1IjoiZ25nY3AiLCJhIjoiY2lsNXd5b3ZrMDA0a3UybHoxY3h5NGN3eiJ9.OrXfMbZ123f3f1EfPRCHHA';
-	var map = L.mapbox.map('map', 'mapbox.streets').setView([40, -75], 9);
-	var layer = L.mapbox.tileLayer('mapbox.streets');
+	map = L.mapbox.map('map', 'gngcp.p97eefp5').setView([40, -97], 5);
+	var layer = L.mapbox.tileLayer('gngcp.p97eefp5');
 	layer.on('ready', function(){
-
+		getData();
 	});
 }
 
 var getData = function() {
-
+	$.ajax({
+    url:'data/response.json',
+    type: "get",
+    success:function(infoFeed) {
+      data = infoFeed;
+      addLayers();
+    },
+    dataType: "json"
+  })
 }
 
 var addLayers = function() {
+	var positive = new L.LayerGroup([]);
+	var negative = new L.LayerGroup([]);
 
+	 for (i = 0; i < data.length; i++){
+	    var circle = new L.circleMarker([data[i].lat, data[i].lng]).bindPopup(data[i].Summary);
+	    circle.setRadius('5');
+
+	    //Red if killed, gray if not
+	    if (data[i]["Hit or Killed?"] == "Killed") {
+	      circle.options.fillColor = '#870029';
+	      circle.options.color = '#870029';
+	    } else {
+	      circle.options.fillColor = '#ffc40d';
+	      circle.options.color = '#ffc40d';
+	    } 
+
+	    //Builds layer groups based on race
+		if (data[i].Race == "Black or African American") {
+	      positive.addLayer(circle);
+	    } else {
+	      negative.addLayer(circle);
+	    }
+	 } 
+	 positive.addTo(map);
+	 negative.addTo(map);
 }
