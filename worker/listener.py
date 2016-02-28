@@ -16,10 +16,12 @@ class TweetStreamListener(StreamListener):
 
     def on_data(self, data):
         tweet = json.loads(data)
-	if tweet.get('text', None) and tweet.get('place', {}).get('country_code', None) == 'US':
-	    tweet['score'] =  clf.classify(tweet['text'])
-	    if tweet['score'] != 'neutral':
-	        r.publish('tweet_stream', json.dumps(tweet))
+	print tweet
+	if tweet.get('text', None) and tweet.get('place', None):
+	    if tweet['place'].get('country_code', '') == 'US':
+	        tweet['score'] =  clf.classify(tweet['text'])
+	        if tweet['score'] != 'neutral':
+	            r.publish('tweet_stream', json.dumps(tweet))
         return True
 
     def on_error(self, status):
