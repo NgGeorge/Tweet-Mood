@@ -17,3 +17,5 @@ pip-selfcheck.json
 !.elasticbeanstalk/*.global.yml
 
 dump.rdb
+*.pyc
+/.DS_Store/*
