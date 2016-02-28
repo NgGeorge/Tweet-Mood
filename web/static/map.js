@@ -1,27 +1,38 @@
 var currentState = "AL";
+var stateLayers = new L.LayerGroup([]);
 var map;
 var NYT = "http://api.nytimes.com/svc/topstories/v1/national.json?api-key=b6467e1fd3401efb76c76c978f01f015:5:74562598";
 var timer = null;
+var filterManager = 0;
 
 var drawMap = function() {
 	L.mapbox.accessToken = 'pk.eyJ1IjoiZ25nY3AiLCJhIjoiY2lsNXd5b3ZrMDA0a3UybHoxY3h5NGN3eiJ9.OrXfMbZ123f3f1EfPRCHHA';
 	var southWest = L.latLng(0, -170),
     northEast = L.latLng(75, 0),
     bounds = L.latLngBounds(southWest, northEast);
-
 	map = L.mapbox.map('map', 'gngcp.p97o5d8j', {
 		maxBounds: bounds,
 		maxZoom: 20,
 		minZoom: 3
 	}).setView([40, -97], 5);
-
+	timer = setInterval(myTimer, 10000);
 	var layer = L.mapbox.tileLayer('gngcp.p97o5d8j');
-	timer = setInterval(L.geoJson(statesData, {style: style}).addTo(map), 2000);
 	layer.on('ready', function(){
 		getData();
 		getNews();
 		$('#news').hide(); // Starts Hidden
 	});
+
+	stateLayers.fillOpacity = .5;
+	var overlay = {
+		"states" : stateLayers
+	};
+
+	L.control.layers(null, overlay, {position: 'topleft'}).addTo(map);
+}
+
+function myTimer() {
+	L.geoJson(statesData, {style: style}).addTo(stateLayers);
 }
 
 function getColor(d) {
@@ -43,7 +54,7 @@ function style(feature) {
         opacity: 1,
         color: 'white',
         dashArray: '3',
-        fillOpacity: 0.5
+        fillOpacity: 0.3
     };
 }
 
@@ -72,7 +83,7 @@ var addLayers = function(singleData) {
 	currentState = singleData.place.full_name.split(',')[1].trim();
 	if (currentState.length == 2) {
 		var circle = new L.circleMarker([singleData.place.bounding_box.coordinates[0][0][1], singleData.place.bounding_box.coordinates[0][0][0]]).bindPopup(singleData.text);
-	    circle.setRadius('2');
+	    circle.setRadius('5');
 	    if (singleData.score == 'positive') {
 		    circle.options.fillColor = '#4CAF50';
 			circle.options.color = '#4CAF50';
@@ -109,11 +120,14 @@ var buildNews = function(dat){
 		var author = document.createElement("p");
 		author.innerHTML = dat[i].byline;
 		author.className = "authors";
+		var time = document.createElement("p");
+		time.innerHTML = dat[i].published_date;
 		var link = document.createElement("a");
 		link.href = dat[i].url;
 		link.innerHTML = dat[i].url;
 		infoPiece.appendChild(title);
 		infoPiece.appendChild(author);
+		infoPiece.appendChild(time);
 		infoPiece.appendChild(link);
 
 		$("#news").prepend(infoPiece);
@@ -121,24 +135,29 @@ var buildNews = function(dat){
 }
 
 var populateFeed = function(singleData) {
-	var infoPiece = document.createElement("div");
-	infoPiece.className = "infoPiece";
+	if (filterManager == 10) {
+		var infoPiece = document.createElement("div");
+		infoPiece.className = "infoPiece";
 
-	var textData = document.createElement("p");
-	infoPiece.appendChild(textData);
+		var textData = document.createElement("p");
+		infoPiece.appendChild(textData);
 
-	var tokens = singleData.text.match(/\S+/g);
-	for (i = 0; i < tokens.length; i++) {
-		if (tokens[i].charAt(0) != '#') {
-			if (tokens[i].substring(0, 8) != "https://") {
-				textData.innerHTML += tokens[i] + " ";
+		var tokens = singleData.text.match(/\S+/g);
+
+		for (i = 0; i < tokens.length; i++) {
+			if (tokens[i].charAt(0) != '#') {
+				if (tokens[i].substring(0, 8) != "https://") {
+					textData.innerHTML += tokens[i] + " ";
+				} else {
+					textData.innerHTML += "<a href='" + tokens[i] + "'>" + tokens[i] + " </a>";
+				}
 			} else {
-				textData.innerHTML += "<a href='" + tokens[i] + "'>" + tokens[i] + " </a>";
+				textData.innerHTML += "<a href='https://twitter.com/hashtag/" + tokens[i].substring(1, tokens[i].length) + "'>" + tokens[i] + " </a>";
 			}
-		} else {
-			textData.innerHTML += "<a href='https://twitter.com/hashtag/" + tokens[i].substring(1, tokens[i].length) + "'>" + tokens[i] + " </a>";
 		}
+		$("#twitter").prepend(infoPiece); 
+		filterManager = 0;
+	} else {
+		filterManager++;
 	}
-
-	$("#twitter").prepend(infoPiece);
 }

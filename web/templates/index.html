@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <title>US In-Motion</title>
+    <title>Tweet-Mood</title>
 
         <!-- jQuery, Bootstrap -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
@@ -29,19 +29,17 @@
 
   <body>
   	<!-- Displays different data feeds -->
-  	<div id="dataFeed">
+  	<div id="dataFeed" display: hidden>
       <div id="twitter"> </div>
       <div id="news"> </div>
-      <div id="education"> </div>
     </div>
 
-  	<h1> US In-Motion : A United Map of <span style="color:yellow">Emotions</span> 
+  	<h1> Tweet-<span style="color:yellow">Mood</span> 
       <div class="dropdown">
   	  		<button class="feedButton" onclick="$('#dataFeed').fadeToggle()"> Toggle Feed </button>
   	  		<div class="dropdown-content"> 
-  	  			<button class="dropdownOption" onclick="$('#twitter').show(); $('#news').hide()"> Twitter </button>
-  	  			<button class="dropdownOption" onclick="$('#twitter').hide(); $('#news').show()"> News </button>
-  	  			<button class="dropdownOption"> Education </button>
+  	  			<button class="dropdownOption" onclick="$('#twitter').show(); $('#news').hide(); $('#dataFeed').show()"> Twitter </button>
+  	  			<button class="dropdownOption" onclick="$('#twitter').hide(); $('#news').show(); $('#dataFeed').show()"> News </button>
   	  		</div>
   	  </div>
     </h1> 
