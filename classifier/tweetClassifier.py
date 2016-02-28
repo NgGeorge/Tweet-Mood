@@ -54,9 +54,9 @@ class tweetClassifier():
 			for word in processed:
 				if word in self.probs.keys():
 					if self.probs[ word ] == 0.0:
-						pos += -100.0 # add miniscule value 1e-100
+						pos += -30.0 # add miniscule value 1e-100
 					elif self.probs[ word ] == 1.0:
-						neg += -100.0 # add miniscule value 1e-100
+						neg += -30.0 # add miniscule value 1e-100
 					else:
 						pos += math.log10( self.probs[ word ] )
 						neg += math.log10( 1 - self.probs[ word ] )
@@ -99,7 +99,7 @@ class tweetClassifier():
 		self.pos_prob = data[ 'pos_prob' ]
 
 """
-use to run tests
+train classifier
 """
 if __name__ == '__main__':
 	raw_tweets = open( 'messages1.txt', 'r' )
@@ -119,4 +119,7 @@ if __name__ == '__main__':
 
 	clf = tweetClassifier()
 	clf.train( tweets, labels )
-	print clf.classify( 'why am I still awake?' )
+	
+	save = open( 'save_trained.txt', 'w+' )
+	save.write( clf.to_json() )
+	save.close()
