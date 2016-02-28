@@ -38,9 +38,8 @@
       <div class="dropdown">
   	  		<button class="feedButton" onclick="$('#dataFeed').fadeToggle()"> Toggle Feed </button>
   	  		<div class="dropdown-content"> 
-  	  			<button class="dropdownOption" onclick="$('#twitter').show()"> Twitter </button>
-  	  			<button class="dropdownOption" onclick="$('#twitter').hide()"> 
-            News </button>
+  	  			<button class="dropdownOption" onclick="$('#twitter').show(); $('#news').hide()"> Twitter </button>
+  	  			<button class="dropdownOption" onclick="$('#twitter').hide(); $('#news').show()"> News </button>
   	  			<button class="dropdownOption"> Education </button>
   	  		</div>
   	  </div>
@@ -49,7 +48,7 @@
 
   	<div id="map"></div>
 
-  	<script>
+  <script>
 		drawMap();
 	</script>
   </body>
