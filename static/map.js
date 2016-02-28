@@ -1,5 +1,7 @@
-var data;
+var data = [];
 var map;
+var positive;
+var negative;
 
 var drawMap = function() {
 	L.mapbox.accessToken = 'pk.eyJ1IjoiZ25nY3AiLCJhIjoiY2lsNXd5b3ZrMDA0a3UybHoxY3h5NGN3eiJ9.OrXfMbZ123f3f1EfPRCHHA';
@@ -11,20 +13,38 @@ var drawMap = function() {
 }
 
 var getData = function() {
-	$.ajax({
-    url:'data/response.json',
-    type: "get",
-    success:function(infoFeed) {
-      data = infoFeed;
-      addLayers();
-    },
-    dataType: "json"
-  })
+	var source = new EventSource($SCRIPT_ROOT + "/tweets");
+	
+	/*source.addEventListener('message', function(e) {
+	alert("test");
+	  console.log(e.data);
+	}, false);
+
+	source.addEventListener('open', function(e) {
+			alert("test");
+
+		console.log(e.data);
+	  // Connection was opened.
+	}, false);
+
+	source.addEventListener('error', function(e) {
+	  if (e.readyState == EventSource.CLOSED) {
+	  	console.log("closed");
+	    // Connection was closed.
+	  }
+	}, false); */
+	
+	source.onmessage = function(event) {
+	    console.log(JSON.parse(event.data));
+	    data.push(JSON.parse(event.data));
+	    //addLayers();
+	    console.log(data);
+	};  
 }
 
 var addLayers = function() {
-	var positive = new L.LayerGroup([]);
-	var negative = new L.LayerGroup([]);
+	positive = new L.LayerGroup([]);
+	negative = new L.LayerGroup([]);
 
 	 for (i = 0; i < data.length; i++){
 	    var circle = new L.circleMarker([data[i].lat, data[i].lng]).bindPopup(data[i].Summary);

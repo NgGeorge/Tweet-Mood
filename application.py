@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, stream_with_context
+from flask import Flask, request, Response, stream_with_context, render_template, jsonify
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
@@ -6,7 +6,6 @@ from listener import StreamListener
 import simplejson as json
 import os
 import redis
-
 
 application = Flask(__name__)
 red = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -21,10 +20,9 @@ def event_stream():
 def index():
     return render_template('index.html')
 
-@application.route('/tweets', methods=['GET'])
+@application.route('/tweets')
 def get_tweets():
     return Response(event_stream(), mimetype="text/event-stream")
-
 
 if __name__ == '__main__':
     application.debug = True

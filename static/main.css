@@ -10,16 +10,17 @@ h1 {
 	color: #f2f2f2;
 	margin: 0;
 	height: 2em;
+    font-size:2.3vw;
 	padding-left: 10%;
 }
 
 #dataFeed {
 	background-color: rgba(105, 105, 105, .8);
 	position:absolute;
-	margin-left: 70%;
+	margin-left: 70.2%;
 	overflow: scroll;
 	height: 100%;
-	width: 30%;
+	width: 30vw;
 	z-index: 1;
 }
 
@@ -37,7 +38,7 @@ h1 {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 160px;
+    min-width: 13vw;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
@@ -89,16 +90,17 @@ h1 {
 }
 
 .feedButton {
-    background-color: #4CAF50; /* Green */
+    background-color: #f6f60e; /* Green */
     border: none;
-    color: white;
+    color: #3e3e3e;
+    font-size: 1.5vw;
     padding: 12px 18px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 18px;
     height: 100%;
-    width: 160px;
+    width: 13vw;
+    font-weight: bold;
 }
 
 .infoPiece {

@@ -13,8 +13,11 @@
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
 
     <!-- Custom files -->
-    <script type="text/javascript" src="js/map.js"></script>
-    <link rel="stylesheet" href="css/main.css"/>
+    <script type="text/javascript" src="{{ url_for('static', filename='map.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css')}}"/>
+    <script type="text/javascript">
+      $SCRIPT_ROOT = {{ request.script_root | tojson | safe}};
+    </script>
 
     <!-- Map Box -->
     <script src='https://api.mapbox.com/mapbox.js/v2.3.0/mapbox.js'></script>
@@ -27,16 +30,17 @@
   	<!-- Displays different data feeds -->
   	<div id="dataFeed"></div>
 
-  	<h1> World In-Motion : A World Map of Emotions 
-  		<div class="dropdown">
-	  		<button class="feedButton" onclick="$('#dataFeed').toggle()"> Toggle Feed </button>
-	  		<div class="dropdown-content"> 
-	  			<button class="dropdownOption"> Twitter </button>
-	  			<button class="dropdownOption"> Local News </button>
-	  			<button class="dropdownOption"> Education </button>
-	  		</div>
-	  	</div>
-  	</h1>
+  	<h1> World In-Motion : A World Map of <span style="color:yellow">Emotions</span> 
+      <div class="dropdown">
+  	  		<button class="feedButton" onclick="$('#dataFeed').toggle()"> Toggle Feed </button>
+  	  		<div class="dropdown-content"> 
+  	  			<button class="dropdownOption"> Twitter </button>
+  	  			<button class="dropdownOption"> Local News </button>
+  	  			<button class="dropdownOption"> Education </button>
+  	  		</div>
+  	  </div>
+    </h1> 
+
 
   	<div id="map"></div>
 
