@@ -1,8 +1,7 @@
+var currentState = "AL";
 var map;
-var choose = true;
-var positive = new L.LayerGroup([]);
-var	negative = new L.LayerGroup([]);
 var NYT = "http://api.nytimes.com/svc/topstories/v1/national.json?api-key=b6467e1fd3401efb76c76c978f01f015:5:74562598";
+var timer = null;
 
 var drawMap = function() {
 	L.mapbox.accessToken = 'pk.eyJ1IjoiZ25nY3AiLCJhIjoiY2lsNXd5b3ZrMDA0a3UybHoxY3h5NGN3eiJ9.OrXfMbZ123f3f1EfPRCHHA';
@@ -17,7 +16,7 @@ var drawMap = function() {
 	}).setView([40, -97], 5);
 
 	var layer = L.mapbox.tileLayer('gngcp.p97o5d8j');
-	L.geoJson(statesData, {style: style}).addTo(map);
+	timer = setInterval(L.geoJson(statesData, {style: style}).addTo(map), 2000);
 	layer.on('ready', function(){
 		getData();
 		getNews();
@@ -28,13 +27,13 @@ var drawMap = function() {
 function getColor(d) {
 	 return d > 80 ? '#15811a' :
            d > 60  ? '#319635' :
-           d > 25  ? '#55b059' :
-           d > 5  ? '#7ecc82' :
-           d > -5   ? '#d3d3d3' :
-           d > -25   ? '#d489a0' :
-           d > -60   ? '#bd5776' :
-           d > -80    ? '#9a1f44' :
-					  '#870029' ;
+           d > 30  ? '#55b059' :
+           d > 15  ? '#7ecc82' :
+           d > -15 ? '#d489a0' :
+           d > -30 ? '#bd5776' :
+           d > -60 ? '#9a1f44' :
+		   d > -80 ? '#870029' :
+		   			 '#d3d3d3' ;
 }
 
 function style(feature) {
@@ -70,29 +69,30 @@ var getNews = function() {
 }
 
 var addLayers = function(singleData) {
-	var circle = new L.circleMarker([singleData.place.bounding_box.coordinates[0][0][1], singleData.place.bounding_box.coordinates[0][0][0]]).bindPopup(singleData.text);
-    circle.setRadius('2');
-    $(circle._icon).addClass('marker');
-    if (choose) {
-	    circle.options.fillColor = '#870029';
-		circle.options.color = '#870029';
-		choose = false;
-	} else {
-		circle.options.fillColor = '#4CAF50';
-		circle.options.color = '#4CAF50';
-		choose = true;
-	}
-    populateFeed(singleData);
-	circle.addTo(map);
-	for (i = 0; i < statesData.length; i++) {
-		if (statesData[i].properties.abbr == singleData.place.full_name.split(',')[1]); {
-			statesData[i].properties.count++;
-			if (singleData.score == "positive") {
-				statesData[i].properties.score += 1;
-			} else {
-				statesData[i].properties.score -= 1;
+	currentState = singleData.place.full_name.split(',')[1].trim();
+	if (currentState.length == 2) {
+		var circle = new L.circleMarker([singleData.place.bounding_box.coordinates[0][0][1], singleData.place.bounding_box.coordinates[0][0][0]]).bindPopup(singleData.text);
+	    circle.setRadius('2');
+	    if (singleData.score == 'positive') {
+		    circle.options.fillColor = '#4CAF50';
+			circle.options.color = '#4CAF50';
+		} else {
+			circle.options.fillColor = '#870029';
+			circle.options.color = '#870029';
+		}
+	    populateFeed(singleData);
+		circle.addTo(map);
+		for (i = 0; i < statesData.features.length; i++) {
+			if (statesData.features[i].properties.abbr == currentState) {
+					statesData.features[i].properties.count += 1;
+				if (singleData.score == "positive") {
+					statesData.features[i].properties.score += 1;
+				} else {
+					statesData.features[i].properties.score -= 1;
+				}
+				break;
+
 			}
-			L.geoJson(statesData[i], {style: style}).addTo(map);
 		}
 	}
 }

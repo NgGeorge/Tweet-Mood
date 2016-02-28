@@ -10,12 +10,6 @@ body {
 	font-family : "Open Sans", sans-serif;
 }
 
-.leaflet-circle-icon.marker {}
-
-g {
-    animation: blinker 1s linear 3;
-}
-
 h1 {
 	background-color: #3e3e3e;
 	color: #f2f2f2;
