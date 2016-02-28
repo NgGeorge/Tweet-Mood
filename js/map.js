@@ -3,8 +3,8 @@ var map;
 
 var drawMap = function() {
 	L.mapbox.accessToken = 'pk.eyJ1IjoiZ25nY3AiLCJhIjoiY2lsNXd5b3ZrMDA0a3UybHoxY3h5NGN3eiJ9.OrXfMbZ123f3f1EfPRCHHA';
-	map = L.mapbox.map('map', 'gngcp.p97eefp5').setView([40, -97], 5);
-	var layer = L.mapbox.tileLayer('gngcp.p97eefp5');
+	map = L.mapbox.map('map', 'gngcp.p97o5d8j').setView([40, -97], 5);
+	var layer = L.mapbox.tileLayer('gngcp.p97o5d8j');
 	layer.on('ready', function(){
 		getData();
 	});
@@ -35,8 +35,8 @@ var addLayers = function() {
 	      circle.options.fillColor = '#870029';
 	      circle.options.color = '#870029';
 	    } else {
-	      circle.options.fillColor = '#ffc40d';
-	      circle.options.color = '#ffc40d';
+	      circle.options.fillColor = '#4CAF50';
+	      circle.options.color = '#4CAF50';
 	    } 
 
 	    //Builds layer groups based on race
@@ -45,7 +45,22 @@ var addLayers = function() {
 	    } else {
 	      negative.addLayer(circle);
 	    }
+
+	    populateFeed(data[i]);
 	 } 
 	 positive.addTo(map);
 	 negative.addTo(map);
+}
+
+
+
+var populateFeed = function(data) {
+	var infoPiece = document.createElement("div");
+	infoPiece.className = "infoPiece";
+
+	var textData = document.createElement("p");
+	textData.innerHTML = data.Summary;
+	infoPiece.appendChild(textData);
+
+	$("#dataFeed").append(infoPiece);
 }

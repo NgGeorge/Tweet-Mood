@@ -24,9 +24,22 @@
   </head>
 
   <body>
+  	<!-- Displays different data feeds -->
   	<div id="dataFeed"></div>
-  	<h1> World In-Motion : A World Map of Emotions </h1>
+
+  	<h1> World In-Motion : A World Map of Emotions 
+  		<div class="dropdown">
+	  		<button class="feedButton" onclick="$('#dataFeed').toggle()"> Toggle Feed </button>
+	  		<div class="dropdown-content"> 
+	  			<button class="dropdownOption"> Twitter </button>
+	  			<button class="dropdownOption"> Local News </button>
+	  			<button class="dropdownOption"> Education </button>
+	  		</div>
+	  	</div>
+  	</h1>
+
   	<div id="map"></div>
+
   	<script>
 		drawMap();
 	</script>
