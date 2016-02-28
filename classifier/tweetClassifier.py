@@ -43,8 +43,17 @@ class tweetClassifier():
 		return pos, neg
 
 	def classify( self, tweet ):
+		data = self.probabilities( tweet )
+		if data[ 'positive' ] > 0.7:
+			return 'positive'
+		elif data[ 'negative' ] > 0.7:
+			return 'negative'
+		else:
+			return 'neutral'
+
+	def probabilities( self, tweet ):
 		"""
-		classify a tweet as negative or positive
+		produce probabilities of negative and positive
 		"""
 		if self.trained:
 			processed = self._cleanTweet( tweet )
