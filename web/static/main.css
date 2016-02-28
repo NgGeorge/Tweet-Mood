@@ -16,11 +16,15 @@ h1 {
 	margin: 0;
 	height: 2em;
     font-size:2.4vw;
-	padding-left: 22%;
+	padding-left: 16%;
 }
 
 g {
-    animation: blinker 1.5s linear 2;
+    animation: blinker 1s linear 2;
+}
+
+#capture {
+    margin-left: 14%;
 }
 
 #dataFeed {
@@ -56,7 +60,6 @@ g {
 	position: relative;
 	display: inline-block;
 	height: 100%;
-    margin-left: 26%;
 }
 
 /* Links inside the dropdown */

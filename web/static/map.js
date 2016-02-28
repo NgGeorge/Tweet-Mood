@@ -4,6 +4,7 @@ var map;
 var NYT = "http://api.nytimes.com/svc/topstories/v1/national.json?api-key=b6467e1fd3401efb76c76c978f01f015:5:74562598";
 var timer = null;
 var filterManager = 0;
+var layersOn = false;
 
 var drawMap = function() {
 	L.mapbox.accessToken = 'pk.eyJ1IjoiZ25nY3AiLCJhIjoiY2lsNXd5b3ZrMDA0a3UybHoxY3h5NGN3eiJ9.OrXfMbZ123f3f1EfPRCHHA';
@@ -15,25 +16,15 @@ var drawMap = function() {
 		maxZoom: 20,
 		minZoom: 3
 	}).setView([40, -97], 5);
-	timer = setInterval(myTimer, 7500);
 	var layer = L.mapbox.tileLayer('gngcp.p97o5d8j');
 	layer.on('ready', function(){
 		getData();
 		getNews();
 		$('#news').hide(); // Starts Hidden
 	});
-
 	stateLayers.fillOpacity = .5;
-	var overlay = {
-		"states" : stateLayers
-	};
-
-	L.control.layers(null, overlay, {position: 'topleft'}).addTo(map);
 }
 
-function myTimer() {
-	L.geoJson(statesData, {style: style}).addTo(stateLayers);
-}
 
 function getColor(d) {
 	 return d > 80 ? '#15811a' :
@@ -105,6 +96,18 @@ var addLayers = function(singleData) {
 
 			}
 		}
+	}
+}
+
+var toggleLayer = function() {
+
+	if (!layersOn ) {
+		L.geoJson(statesData, {style: style}).addTo(stateLayers);
+		stateLayers.addTo(map);
+		layersOn = true;
+	} else {
+		stateLayers.clearLayers();
+		layersOn = false;
 	}
 }
 
