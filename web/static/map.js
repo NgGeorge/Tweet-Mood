@@ -2,7 +2,7 @@ var currentState = "AL";
 var stateLayers = new L.LayerGroup([]);
 var newsLayers = new L.LayerGroup([]);
 var map;
-var NYT = "http://api.nytimes.com/svc/mostpopular/v2/mostviewed/national/7.json?api-key=c5d30e17f417c34c82615115f78c4d7f:2:74562598";
+var NYT = "http://api.nytimes.com/svc/mostpopular/v2/mostviewed/national/1.json?api-key=c5d30e17f417c34c82615115f78c4d7f:2:74562598";
 var timer = null;
 var filterManager = 0;
 var layersOn = false;
