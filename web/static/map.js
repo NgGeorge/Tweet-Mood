@@ -1,10 +1,12 @@
 var currentState = "AL";
 var stateLayers = new L.LayerGroup([]);
+var newsLayers = new L.LayerGroup([]);
 var map;
-var NYT = "http://api.nytimes.com/svc/topstories/v1/national.json?api-key=b6467e1fd3401efb76c76c978f01f015:5:74562598";
+var NYT = "http://api.nytimes.com/svc/mostpopular/v2/mostviewed/national/7.json?api-key=c5d30e17f417c34c82615115f78c4d7f:2:74562598";
 var timer = null;
 var filterManager = 0;
 var layersOn = false;
+var newsLayerOn = false;
 
 var drawMap = function() {
 	L.mapbox.accessToken = 'pk.eyJ1IjoiZ25nY3AiLCJhIjoiY2lsNXd5b3ZrMDA0a3UybHoxY3h5NGN3eiJ9.OrXfMbZ123f3f1EfPRCHHA';
@@ -111,6 +113,16 @@ var toggleLayer = function() {
 	}
 }
 
+var toggleNewsLayer = function() {
+	if (!newsLayerOn) {
+		newsLayers.addTo(map);
+		newsLayerOn = true;
+	} else {
+		map.removeLayer(newsLayers);
+		newsLayerOn = false;
+	}
+}
+
 
 var buildNews = function(dat){
 	for (i = 0; i < dat.length; i++) {
@@ -134,7 +146,32 @@ var buildNews = function(dat){
 		infoPiece.appendChild(link);
 
 		$("#news").prepend(infoPiece);
-	}
+		if (dat[i].geo_facet != null && dat[i].geo_facet != ""){
+			createNewsLocation(dat[i]);
+		}
+	}	
+}
+
+var createNewsLocation = function(dat){
+	var city = dat.geo_facet[0].split('(')[0];
+
+	$.ajax({
+	    url:'https://api.mapbox.com/geocoding/v5/mapbox.places/' + city + '.json?country=us&access_token=pk.eyJ1IjoiZ25nY3AiLCJhIjoiY2lsNXd5b3ZrMDA0a3UybHoxY3h5NGN3eiJ9.OrXfMbZ123f3f1EfPRCHHA',
+	    type: "get",
+	    success:function(datM) {
+	      buildNewsMarker(datM, dat.title, dat.url, dat.published_date);
+	    },
+	    dataType: "json"
+  	})
+}
+
+var buildNewsMarker = function(dat, titleText, url, time){
+	var popupData = '<div class="popupBox"> <h1 class="popup">' + titleText + '</h1> </br> <p class="timestamp">' + time + '</p> <a href=' + url + '>Link</a></div>';
+	var circle = new L.circleMarker([dat.features[0].center[1], dat.features[0].center[0]]).bindPopup(popupData);
+	circle.setRadius('15');
+	circle.options.fillColor = '#fff626';
+	circle.options.color = '#fff626';
+	circle.addTo(newsLayers);
 }
 
 var populateFeed = function(singleData) {

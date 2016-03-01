@@ -139,6 +139,15 @@ g {
             animation: fadein 1s;
 }
 
+.popup {
+    background-color: white;
+    color: #3e3e3e;
+}
+
+.popupBox .timestamp, .popupBox a{
+    margin-left: 6%;
+}
+
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
