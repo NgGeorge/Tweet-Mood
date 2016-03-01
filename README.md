@@ -1,2 +1,2 @@
-# HappinessMap
-Name to be Determined - A javascript web app that analyzes tweets from Twitter's API, runs them through Azure's sentiment analyzer, and populates a map with positive/negative tweets
+# Tweet-Mood
+We're Tweet-Mood, a web based, geolocated sentiment analysis application using live tweets posted in the US. Our goal was to create a more powerful tool for understanding how various socioeconomic and other demographic factors play into the overall sentiments expressed in a community. Our application is built on a python flask server hosted on an AWS ec2 instance. Data is streamed through a redis backed ElastiCache to a naive Bayes classification model. Frontend data visualization is done in LeaftletJS and Mapbox.
