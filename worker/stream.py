@@ -14,8 +14,6 @@ def stream():
 	auth = OAuthHandler(consumer_key, consumer_secret)
 	auth.set_access_token(access_token, access_token_secret)
 
-	r = redis.StrictRedis(host=os.getenv('REDIS_HOST'), port=6379, db=0)
-
 	listener = TweetStreamListener()
 
 	stream = Stream(auth, listener)

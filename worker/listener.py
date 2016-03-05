@@ -4,9 +4,13 @@ from tweepy import Stream
 from classifier.tweetClassifier import tweetClassifier
 import simplejson as json
 import redis
+import pika
 import os
 
-r = redis.StrictRedis(host=os.getenv('REDIS_HOST'), port=6379, db=0)
+#r = redis.StrictRedis(host=os.getenv('REDIS_HOST'), port=6379, db=0)
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+channel = connection.channel()
+channel.exchange_declare(exchange='tweet_stream', type='fanout')
 clf = tweetClassifier()
 
 class TweetStreamListener(StreamListener):
@@ -21,10 +25,14 @@ class TweetStreamListener(StreamListener):
 	    if tweet['place'].get('country_code', '') == 'US':
 	        tweet['score'] =  clf.classify(tweet['text'])
 	        if tweet['score'] != 'neutral':
-	            r.publish('tweet_stream', json.dumps(tweet))
+                    channel.basic_publish(exchange='tweet_stream',
+                                          routing_key='',
+                                          body=json.dumps(tweet))
+	            #r.publish('tweet_stream', json.dumps(tweet))
         return True
 
     def on_error(self, status):
         print status
         if status == 420:
+            connection.close()
             return False

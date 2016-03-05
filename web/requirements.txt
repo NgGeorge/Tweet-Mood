@@ -1,8 +1,10 @@
+daemon==1.1
 Flask==0.10.1
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
 oauthlib==1.0.3
+pika==0.10.0
 pygal==2.0.1
 python-dateutil==2.4.2
 redis==2.10.5
