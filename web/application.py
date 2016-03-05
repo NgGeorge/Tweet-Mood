@@ -33,7 +33,8 @@ def event_stream():
     '''
     for method_frame, properties, body in channel.consume(queue_name):
         channel.basic_ack(method_frame.delivery_tag)
-        yield body 
+
+        yield 'data: %s\n\n' % body
 
 
 
