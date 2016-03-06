@@ -6,19 +6,17 @@ import os
 
 application = Flask(__name__)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.environ.get('RABBIT_HOST'), port=5672))
-channel = connection.channel()
-channel.exchange_declare(exchange='tweet_stream', type='fanout')
 
 def event_stream():
-
-    result = channel.queue_declare(exclusive=False)
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.environ.get('RABBIT_HOST'), port=5672))
+    channel = connection.channel()
+    channel.exchange_declare(exchange='tweet_stream', type='fanout')
+    result = channel.queue_declare()
     queue_name = result.method.queue
 
     channel.queue_bind(exchange='tweet_stream', queue=queue_name)
     for method_frame, properties, body in channel.consume(queue_name):
         channel.basic_ack(method_frame.delivery_tag)
-
         yield 'data: %s\n\n' % body
 
 @application.route('/')
