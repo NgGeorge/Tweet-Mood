@@ -1,8 +1,6 @@
 from flask import Flask, request, Response, render_template
-from listener import TweetStreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
-import redis
 import pika
 import os
 
