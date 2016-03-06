@@ -8,11 +8,11 @@ application = Flask(__name__)
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.environ.get('RABBIT_HOST'), port=5672))
 channel = connection.channel()
+channel.exchange_declare(exchange='tweet_stream', type='fanout')
 
 def event_stream():
-    channel.exchange_declare(exchange='tweet_stream', type='fanout')
 
-    result = channel.queue_declare(exclusive=True)
+    result = channel.queue_declare(exclusive=False)
     queue_name = result.method.queue
 
     channel.queue_bind(exchange='tweet_stream', queue=queue_name)
